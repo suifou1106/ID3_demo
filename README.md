@@ -22,7 +22,7 @@ The Entropy of the set $S$ is given by:
 
 $$H(S) = -\sum_{i=1}^{k} p(c_i) \log_2(p(c_i))$$
 
-*Note: If $p(c_i) = 0$ for any class, the term $0 \log_2(0)$ is conventionally evaluated as $0$ using limits in information theory.*
+>Note: If $p(c_{i}) = 0$ for any class, the term $0 \log_{2}(0)$ is conventionally evaluated as 0 using limits in information theory.
 
 ### 1.2 Information Gain (Reduction in Entropy)
 Information Gain, denoted as $IG(S, A)$, measures the expected reduction in entropy caused by partitioning the examples according to a given attribute $A$.
@@ -60,7 +60,7 @@ $$A^* = \arg\max_{A_j \in Attributes} IG(S, A_j)$$
 Create a root node for the current tree (or subtree) labeled with $A^*$.
 
 ### Step 3: Partition the Dataset
-For each distinct value $v \in V_{A^*}$ (where $V_{A^*}$ is the set of possible values for $A^*$), partition $S$ into subsets:
+For each distinct value $v \in V_{A^\ast}$ (where $V_{A^\ast}$ is the set of possible values for $A^\ast$), partition $S$ into subsets:
 
 $$S_v = \{x \in S \mid A^*(x) = v\}$$
 
@@ -69,4 +69,4 @@ For each value $v$, recursively call the algorithm to generate a subtree, removi
 
 $$\text{Subtree}_v = \text{ID3}(S_v, Attributes \setminus \{A^*\})$$
 
-Attach each $\text{Subtree}_v$ as a branch to the root node $A^*$ corresponding to the condition $A^* = v$.
+Attach each $\text{Subtree}_v$ as a branch to the root node _A\*_ corresponding to the condition _A\* = v_.
