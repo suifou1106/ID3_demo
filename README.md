@@ -70,3 +70,31 @@ For each value $v$, recursively call the algorithm to generate a subtree, removi
 $$\text{Subtree}_v = \text{ID3}(S_v, Attributes \setminus \{A^*\})$$
 
 Attach each $\text{Subtree}_v$ as a branch to the root node _A\*_ corresponding to the condition _A\* = v_.
+## 3. The C4.5 Algorithm (Overcoming ID3's Limitations)
+
+While ID3 is highly effective, it possesses a significant inherent bias: it strongly favors attributes with a large number of distinct values (e.g., a "Candidate ID" or "Date" column). Such attributes partition the dataset into many small, perfectly pure subsets, yielding an artificially high Information Gain but resulting in severe overfitting.
+
+The **C4.5 algorithm** (developed by Ross Quinlan as an extension to ID3) addresses this bias by introducing a normalization factor called **Split Information** to compute the **Gain Ratio**.
+
+### 3.1 Split Information (Intrinsic Information)
+Split Information, denoted as $SplitInfo(S, A)$, measures the entropy of the dataset $S$ with respect to the values of the attribute $A$ itself, rather than the target classification. It acts as a penalty term for attributes that scatter the data into too many fragmented branches.
+
+Using the established notation, where $V$ is the set of distinct values for attribute $A$, the Split Information is mathematically defined as:
+
+$$SplitInfo(S, A) = -\sum_{v \in V} \frac{|S_v|}{|S|} \log_2 \left( \frac{|S_v|}{|S|} \right)$$
+
+### 3.2 Gain Ratio
+The Gain Ratio normalizes the Information Gain by dividing it by the Split Information. This ensures that attributes generating a massive number of splits are proportionately penalized.
+
+$$GainRatio(S, A) = \frac{IG(S, A)}{SplitInfo(S, A)}$$
+
+> **Mathematical Note:** As the number of partitions increases, the $SplitInfo$ value grows larger, thereby reducing the overall $GainRatio$. In practical implementations, if $SplitInfo(S, A) = 0$ (which occurs if an attribute has the exact same value for all instances in $S$), the attribute is typically discarded to prevent division by zero.
+
+### 3.3 Algorithmic Adjustments for C4.5
+To transition from the formalized ID3 algorithm to C4.5, the core recursive structure remains the same, but with crucial enhancements:
+
+1.  **Modified Step 2 (Optimal Selection Criteria):** Instead of maximizing Information Gain, C4.5 evaluates all attributes and selects the attribute $A^*$ that maximizes the Gain Ratio:
+    
+    $$A^* = \arg\max_{A_j \in Attributes} GainRatio(S, A_j)$$
+
+2.  **Handling Continuous Data:** ID3 is strictly limited to discrete/categorical data. C4.5 introduces the ability to process continuous numerical attributes. For a continuous attribute $A_c$, the algorithm dynamically sorts the numerical values and evaluates potential cut-off thresholds $t$ to partition the dataset into two binary subsets ($A_c \le t$ and $A_c > t$). The threshold $t$ that yields the highest Gain Ratio is dynamically selected during the splitting step.
